@@ -10,7 +10,7 @@ class DbProcess:
     def __init__(cls):
         if cls.db is None:
             cls.db = pm.connect(
-                host="localhost", user="root", password="1234", db="web_project", port=3306
+                host="localhost", user="root", password="123456", db="web_project", port=3306
             )
             print("连接数据库成功")
             cls.cur = cls.db.cursor()
