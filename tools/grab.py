@@ -1,7 +1,7 @@
 import time
 import datetime
 import pandas as pd
-from selenium.webdriver import Chrome
+from selenium.webdriver import Edge
 from selenium.webdriver.common.by import By
 from lxml import etree
 from selenium.webdriver.chrome.options import Options
@@ -11,7 +11,8 @@ chrome_option = Options()
 chrome_option.add_argument('headless')
 
 # chrome = Chrome(options=chrome_option)
-chrome = Chrome()
+#chrome = Chrome()
+chrome = Edge()
 
 def last_comment_date(html):
     root = etree.HTML(html)
