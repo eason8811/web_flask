@@ -14,6 +14,7 @@ chrome_option.add_argument('headless')
 #chrome = Chrome()
 chrome = Edge()
 
+
 def last_comment_date(html):
     root = etree.HTML(html)
     # root = etree.HTML(chrome.page_source)
