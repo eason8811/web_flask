@@ -10,9 +10,10 @@ def gen_captcha(content="0123456789"):
     image = ImageCaptcha()
     # 获取字符串
     captcha_text = "".join(choices(content, k=4))
+    print(f'验证码 = {captcha_text}')
     # 生成图片
     captcha_image = Image.open(image.generate(captcha_text))
-    img = captcha_image.resize((122, 38), Image.ANTIALIAS)
+    img = captcha_image.resize((122, 38), Image.LANCZOS)
     return captcha_text, img
 
 
