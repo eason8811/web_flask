@@ -127,7 +127,6 @@ headers_list = [
         'content-type': 'application/json'
     }
 ]
-
 @retry(stop=stop_after_delay(15))
 def get_info(symbol = 'BTCUSDT',limit = 1500):
     global binance
