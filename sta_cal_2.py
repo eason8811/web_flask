@@ -6,7 +6,7 @@ import requests
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import tqdm
+from tqdm import tqdm
 import statsmodels.api as sm
 import seaborn as sns
 from tenacity import *
@@ -246,8 +246,10 @@ for i in range(len(columns_value)):
         column.append(sy_i_minus_sy_j)
     df_data_eul.append((column - np.mean(column)) / max(column))
 df_data_eul = pd.DataFrame(df_data_eul,index=columns_value,columns=columns_value).copy()
+
+'''
 #计算相关系数
-for i in range(len(columns_value)):
+for i in tqdm(range(len(columns_value))):
     column = []
     for j in range(len(columns_value)):
         a_diff = df_data[columns_value[i]] - np.mean(df_data[columns_value[i]])
@@ -258,6 +260,7 @@ for i in range(len(columns_value)):
         column.append(sy_i_minus_sy_j)
     df_data_corrlation.append(column)
 df_data_corrlation = pd.DataFrame(df_data_corrlation,index=columns_value,columns=columns_value).copy()
+'''
 #线性拟合并计算R2和斜率a
 index = df_data.index
 for i in range(len(columns_value)):
@@ -276,21 +279,23 @@ for i in range(len(columns_value)):
 df_data_a = pd.DataFrame(df_data_a, index=columns_value, columns=columns_value).copy()
 # 相减后方差计算
 var = 1/np.var(df_data[columns_value[0]] - df_data[columns_value[1]])'''
-#计算协整 p 值并记录
-for i in range(len(columns_value)):
+'''#计算协整 p 值并记录
+for i in tqdm(range(len(columns_value))):
     column_p = []
-    print(f'{round((i+1) / len(columns_value) * 100, 3)}%')
+    #print(f'{round((i+1) / len(columns_value) * 100, 3)}%')
     for j in range(len(columns_value)):
         result = sm.tsa.stattools.coint(np.reshape(df_data_org[columns_value[i]],-1),np.reshape(df_data_org[columns_value[j]],-1))
         column_p.append(-result[1])
     df_data_p.append(column_p)
 df_data_p = pd.DataFrame(df_data_p,index=columns_value,columns=columns_value)
 print(df_data_p)
-df_data_p.to_csv("df_data_p.csv",sep=',')
+df_data_p.to_csv("df_data_p.csv",sep=',')'''
+df_data_corrlation.to_csv("df_data_p.cav",sep=',')
 #corr_matric = np.array(df_data_eul)
 #corr_matric = np.array(df_data_r2)
 #corr_matric = np.array(df_data_a)
-corr_matric = np.array(df_data_p)
+#corr_matric = np.array(df_data_p)
+corr_matric = np.array(df_data_corrlation)
 '''corr_matric = 18.3556 * np.array(df_data_eul) + 13.6656 * np.array(df_data_corrlation) + 2.8558 * np.array(df_data_r2) - \
               5.5576 * var + 957.7492 * np.array(df_data_a) + 13.974'''
 correlate = {}
@@ -350,7 +355,7 @@ for i in range(len(symbol_pairs)):
     plt.plot(data_symbol_minus_list)
     plt.plot(data[symbol_pairs[i][0]])
     plt.plot(data[symbol_pairs[i][1]])
-    sns.heatmap(df_data_p,camp='Blues',annot=True)
+    sns.heatmap(df_data_corrlation,annot=False)
     #plt.plot(avg, "-")
     #plt.plot(var, "*")
     plt.savefig(f'D:\\学校文件\\Python\\fig\\{symbol_pairs[i][0]} - {symbol_pairs[i][1]}.png')
@@ -358,8 +363,9 @@ for i in range(len(symbol_pairs)):
     print(f"最大 {symbol_pairs[i][0]} - {symbol_pairs[i][1]} = {max(abs(max(data_symbol_minus_list)),abs(min(data_symbol_minus_list)))}")
     print(f"AVG {symbol_pairs[i][0]} - {symbol_pairs[i][1]} = {avg[0]}")
     print(f"VAR {symbol_pairs[i][0]} - {symbol_pairs[i][1]} = {var[0]}")
-    result = sm.tsa.stattools.coint(df_data_org[symbol_pairs[i][0]], df_data_org[symbol_pairs[i][1]])
-    print(f"result = {result}\n")
+    '''result = sm.tsa.stattools.coint(df_data_org[symbol_pairs[i][0]], df_data_org[symbol_pairs[i][1]])
+    print(f"result = {result}\n")'''
+
     # plt.pause(0.2)
 plt.show()
 
