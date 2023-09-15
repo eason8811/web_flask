@@ -6,7 +6,7 @@ import requests
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
+import tqdm
 import statsmodels.api as sm
 import seaborn as sns
 from tenacity import *
@@ -210,51 +210,11 @@ binance = BINANCE()
 exchanges_info = binance.IO('GET','/fapi/v1/exchangeInfo',{})
 
 symbols = []
-'''print("Check symbols")
-for i in range(len(exchanges_info['symbols'])):
-    if (exchanges_info['symbols'][i]['status'] == 'TRADING') and (exchanges_info['symbols'][i]['symbol'][-4:] != 'BUSD') :
-        symbols.append(exchanges_info['symbols'][i]['symbol'])
-print("Symbols check finished")
-symbols = symbols.copy()
-print(symbols)
-print(f"total calculate times = {len(symbols)*(len(symbols)-1)/2}")'''
 
 data = {}
 data_matric = []
 data_org = {}
 kline_num = 2880
-'''for i in range(len(symbols)):
-    print(f'{round(i/len(symbols)*100,3)}%')
-    get_info(symbols[i], kline_num)
-    data_symbol = pd.read_csv('kline_data.csv', index_col=0, encoding='gb2312') # gb2312
-    data_symbol_close = data_symbol['close'].copy()
-    if len(data_symbol_close) < kline_num:
-        break
-    data_symbol_close_rate = []
-    data_symbol_close_rate2one = []
-    for j in range(len(data_symbol_close)):
-        if j == 0:
-            data_symbol_close_rate.append(0.0)
-        else:
-            data_symbol_close_rate.append((data_symbol_close[data_symbol_close.index[j]]-data_symbol_close[data_symbol_close.index[j-1]])
-                                          / data_symbol_close[data_symbol_close.index[j-1]] + data_symbol_close_rate[-1])
-    #归一化
-    j = 0
-    for j in range(len(data_symbol_close_rate)):
-        Max = max(data_symbol_close_rate)
-        Min = min(data_symbol_close_rate)
-        if Max-Min == 0 :
-            print(data_symbol_close_rate)
-            print(data_symbol_close)
-            print(symbols[i])
-        mean = sum(data_symbol_close_rate) / len(data_symbol_close_rate)
-        Max1 = np.max(np.abs(data_symbol_close_rate))
-        data_symbol_close_rate2one.append((data_symbol_close_rate[j] - mean) / Max1)
-    if len(data_symbol_close_rate2one) == kline_num:
-        data[symbols[i]] = data_symbol_close_rate2one
-        data_org[symbols[i]] = list(data_symbol_close.values)
-        data_matric.append(data_symbol_close_rate2one)
-    time.sleep(3)'''
 
 #plt.ion()
 
@@ -263,21 +223,6 @@ print('=================================================')
 
 #print(data_symbol_minus)
 #plt.ioff()
-'''title_name = symbols
-with open('kline_data_symbol_close_rate2one.csv', 'w', encoding='utf-8', newline='') as file_obj:
-    # 1.创建DicetWriter对象
-    dictWriter = csv.DictWriter(file_obj, title_name)
-    # 2.写表头
-    dictWriter.writeheader()
-    # 3.写入数据(一次性写入多行)
-    dictWriter.writerows(data)
-with open('kline_data_org.csv', 'w', encoding='utf-8', newline='') as file_obj:
-    # 1.创建DicetWriter对象
-    dictWriter = csv.DictWriter(file_obj, title_name)
-    # 2.写表头
-    dictWriter.writeheader()
-    # 3.写入数据(一次性写入多行)
-    dictWriter.writerows(data_org)'''
 
 #df_data = pd.DataFrame(data).copy()
 #df_data_org = pd.DataFrame(data_org).copy()
